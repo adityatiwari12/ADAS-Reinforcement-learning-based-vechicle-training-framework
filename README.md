@@ -115,7 +115,6 @@ Add [ByteTrack](https://github.com/ifzhang/ByteTrack) to determine the driving d
 
 <h1 id="Demo">➤ Demo</h1>
 
-* [***Demo Youtube Video***](https://www.youtube.com/watch?v=CHO0C1z5EWE)
 
 * ***Display***
 
