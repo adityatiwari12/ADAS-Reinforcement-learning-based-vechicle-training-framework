@@ -13,7 +13,7 @@ from TrafficLaneDetector.ufldDetector.perspectiveTransformation import Perspecti
 from TrafficLaneDetector.ufldDetector.utils import LaneModelType, OffsetType, CurvatureType
 LOGGER = Logger(None, logging.INFO, logging.INFO )
 
-video_path = "./demo/demo_video.mp4"
+video_path = "./demo/Simple_Driving_Simulation_Video.mp4"
 lane_config = {
 	"model_path": "./TrafficLaneDetector/models/culane_res18.onnx",
 	"model_type" : LaneModelType.UFLDV2_CULANE
@@ -229,7 +229,7 @@ if __name__ == "__main__":
 	#==========================================================
 	#					Initialize Class
 	#==========================================================
-	LOGGER.info("Starting ADAS Simulation...")
+	LOGGER.info("Starting ADAS Simulation (Demo 2)...")
 	LOGGER.info("-"*40)
 
 	# lane detection model

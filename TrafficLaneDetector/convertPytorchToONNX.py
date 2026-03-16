@@ -68,7 +68,7 @@ def convert_model(model_path, model_type=LaneModelType.UFLDV2_CULANE):
 		# 	net = model_curvelanes.get_model(cfg)
 		# else :
 		net = model_tusimple.get_model(cfg)
-		img = torch.zeros(1, 3, cfg.train_height, cfg.train_width).to('cuda')
+		img = torch.zeros(1, 3, cfg.train_height, cfg.train_width).to('cpu')
 	else :
 		net = parsingNet(pretrained = False, backbone='18', cls_dim = (cfg.griding_num+1,cfg.cls_num_per_lane,4),
 					use_aux=False) # we dont need auxiliary segmentation in testing
@@ -99,8 +99,8 @@ def convert_model(model_path, model_type=LaneModelType.UFLDV2_CULANE):
 	print("==============================================================================================")
 
 if __name__ == '__main__':
-	model_path = "models/tusimple_res18.pth"
-	model_type = LaneModelType.UFLDV2_TUSIMPLE
+	model_path = "models/culane_res18.pth"
+	model_type = LaneModelType.UFLDV2_CULANE
 
 	convert_model(model_path, model_type)
 

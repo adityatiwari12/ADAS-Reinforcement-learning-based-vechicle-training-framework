@@ -1,8 +1,32 @@
-import abc, os
+import abc, os, sys
 import numpy as np
 import onnxruntime
-import tensorrt as trt
-import pycuda.driver as cuda
+from contextlib import contextmanager
+
+onnxruntime.set_default_logger_severity(4) # FATAL
+
+@contextmanager
+def SuppressLogging():
+	"""Redirects low-level system stdout and stderr to devnull."""
+	with open(os.devnull, 'w') as devnull:
+		old_stdout_fd = os.dup(sys.stdout.fileno())
+		old_stderr_fd = os.dup(sys.stderr.fileno())
+		try:
+			os.dup2(devnull.fileno(), sys.stdout.fileno())
+			os.dup2(devnull.fileno(), sys.stderr.fileno())
+			yield
+		finally:
+			os.dup2(old_stdout_fd, sys.stdout.fileno())
+			os.dup2(old_stderr_fd, sys.stderr.fileno())
+			os.close(old_stdout_fd)
+			os.close(old_stderr_fd)
+
+try:
+	import tensorrt as trt
+	import pycuda.driver as cuda
+	TENSORRT_AVAILABLE = True
+except ImportError:
+	TENSORRT_AVAILABLE = False
 
 class EngineBase(abc.ABC):
 	'''
@@ -160,11 +184,29 @@ class OnnxEngine(EngineBase):
 
 	def __init__(self, onnx_file_path):
 		EngineBase.__init__(self, onnx_file_path)
-		if (onnxruntime.get_device() == 'GPU') :
-			self.session = onnxruntime.InferenceSession(onnx_file_path, providers=['CUDAExecutionProvider'])
-		else :
-			self.session = onnxruntime.InferenceSession(onnx_file_path)
+		
+		# Setup silent session options for validation
+		val_options = onnxruntime.SessionOptions()
+		val_options.log_severity_level = 4 # Fatal
+		
+		available = onnxruntime.get_available_providers()
+		functional = []
+		
+		with SuppressLogging():
+			for p in available:
+				if p == 'CPUExecutionProvider':
+					functional.append(p)
+					continue
+				try:
+					# Minimal session to test provider validity (DLL presence)
+					onnxruntime.InferenceSession(onnx_file_path, providers=[p], sess_options=val_options)
+					functional.append(p)
+				except Exception:
+					continue
+		
+			self.session = onnxruntime.InferenceSession(onnx_file_path, providers=functional, sess_options=val_options)
 		self.providers = self.session.get_providers()
+
 		self.engine_dtype = np.float16 if 'float16' in self.session.get_inputs()[0].type else np.float32
 		self.framework_type = "onnx"
 		self.__load_engine_interface()

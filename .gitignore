@@ -1,9 +1,15 @@
 *.pyc
 *.onnx
 *.trt
-
+*.mp4
+*.exe
+*.pth
+*.pt
+*.data
+*.log
+*.part
 
 TrafficLaneDetector/temp/*.mp4
-TrafficLaneDetector/temp/pic/*.jpg
-TrafficLaneDetector/temp/pic/*.png
-ObjectDetector/temp/*.avi
+*.png
+ObjectDetector/temp/*.avi     
+TrafficLaneDetector/temp/pic/*

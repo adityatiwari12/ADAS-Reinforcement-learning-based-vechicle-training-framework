@@ -75,7 +75,7 @@ class PerspectiveTransformation(object):
                 top_right    = ( min(right_lanes[:, 0])+20, top_y)
             else :
                 return 
-            if self.logger != None :
+            if self.logger is not None :
                 self.logger.debug("Transform Type : " + type)
                 self.logger.debug("\ttop-left :" + str(top_left) )
                 self.logger.debug("\tbottom-left :" + str(bottom_left) )

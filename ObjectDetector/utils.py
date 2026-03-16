@@ -63,7 +63,7 @@ class Scaler(object):
 		return canvas	 
 
 	def get_scale_ratio(self): 
-		if (self._old_shape == self._new_shape == None) :
+		if (self._old_shape is None or self._new_shape is None) :
 			raise Exception("Please operate 'process_image' before conversion")
 		return self._old_shape[0] / self._new_shape[0],  self._old_shape[1] / self._new_shape[1]
 	
@@ -90,7 +90,7 @@ class Scaler(object):
 		if not isinstance(kpss, np.ndarray):
 			kpss = np.array(kpss)
 
-		if (kpss != []) :
+		if (kpss.size > 0) :
 			ratioh, ratiow = self.get_scale_ratio()
 			padh, padw = self._pad_shape
 			kpss = np.vstack(kpss)

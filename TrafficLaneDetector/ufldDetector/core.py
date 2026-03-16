@@ -142,7 +142,7 @@ class LaneDetectBase(abc.ABC):
 
 	def __update_lanes_status(self, lanes_status : list) -> None :
 		self.lane_info._area_status = False
-		if(lanes_status != [] and len(lanes_status) % 2 == 0) :
+		if(len(lanes_status) > 0 and len(lanes_status) % 2 == 0) :
 			index = len(lanes_status) // 2
 			if(lanes_status[index-1] and lanes_status[index]):
 				self.lane_info._area_status = True
